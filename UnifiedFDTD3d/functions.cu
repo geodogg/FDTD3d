@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cassert>  // useful for debugging
 #include <cstdlib>
+#include <cmath>
 using namespace std;
 
 // CUDA LIBRARY INCLUDES
@@ -35,4 +36,21 @@ bool getTargetDeviceGlobalMemSize(memsize_t *result, int argc, char **argv)
     // Save the result
     *result = (memsize_t)memsize;
     return true;
+}
+
+void generateRandomData(float *data, const int dimx, const int dimy, const int dimz, const float lowerBound, const float upperBound)
+{
+    srand(0);
+
+    for (int iz = 0 ; iz < dimz ; iz++)
+    {
+        for (int iy = 0 ; iy < dimy ; iy++)
+        {
+            for (int ix = 0 ; ix < dimx ; ix++)
+            {
+                *data = (float)(lowerBound + ((float)rand() / (float)RAND_MAX) * (upperBound - lowerBound));
+                ++data;
+            }
+        }
+    }
 }
