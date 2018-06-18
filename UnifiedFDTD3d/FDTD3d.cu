@@ -32,7 +32,7 @@ const int timesteps = 5;
 const int outerDimx = dimx + 2 * radius;
 const int outerDimy = dimy + 2 * radius;
 const int outerDimz = dimz + 2 * radius;
-int volumeSize = outerDimx * outerDimy * outerDimz;
+const int volumeSize = outerDimx * outerDimy * outerDimz;
 memsize_t memsize;
 const float lowerBound = 0.0f;
 const float upperBound = 1.0f;
