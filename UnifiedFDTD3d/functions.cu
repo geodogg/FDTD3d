@@ -12,7 +12,7 @@ using namespace std;
 // EXTRA
 #include "functions.h"
 
-bool getTargetDeviceGlobalMemSize(memsize_t *result, const int argc, const char **argv)
+bool getTargetDeviceGlobalMemSize(memsize_t *result, int argc, char **argv)
 {
     int               deviceCount  = 0;
     int               targetDevice = 0;
