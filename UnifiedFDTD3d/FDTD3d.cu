@@ -42,8 +42,8 @@ int main(int argc, char * argv[]){
     // Get the memory size of the target device and save in memsize
     memsize_t memsize;
     getTargetDeviceGlobalMemSize(&memsize, argc, argv);
-    memsize /=2;
-    printline("Memory size: %d\n", memsize)
+    memsize /= 2;
+    printf("Memory size: %d\n", memsize);
 
     fclose(outfile);
     return 0;
