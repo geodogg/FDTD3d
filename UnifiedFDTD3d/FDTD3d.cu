@@ -228,7 +228,6 @@ int main(int argc, char * argv[]){
       bufferSrc = tmp;
     }
 
-
     fclose(outfile);
     return 0;
 }
