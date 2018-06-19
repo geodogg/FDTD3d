@@ -47,8 +47,8 @@ __device__ __managed__ float buffer_in[paddedVolumeSize];
 __device__ __managed__ float buffer_out[paddedVolumeSize];
 
 // KERNELS
-__constant__ float stencil[RADIUS + 1];
 #define RADIUS 4
+__constant__ float stencil[RADIUS + 1];
 __global__ void FiniteDifferencesKernel(float *bufferDst, float *bufferSrc)
 {
     bool validr = true;
