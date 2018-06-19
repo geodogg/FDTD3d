@@ -211,8 +211,8 @@ int main(int argc, char * argv[]){
     dimGrid.x = 12;
     dimGrid.y = 24;
     // Execute the FDTD
-    float *bufferSrc = bufferIn + padding;
-    float *bufferDst = bufferOut + padding;
+    float *bufferSrc = buffer_in + padding;
+    float *bufferDst = buffer_out + padding;
     printf(" GPU FDTD loop\n");
 
     for (int it = 0 ; it < timesteps ; it++){
