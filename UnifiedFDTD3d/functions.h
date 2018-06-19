@@ -9,10 +9,10 @@ typedef unsigned __int64 memsize_t;
 typedef uint64_t memsize_t;
 #endif
 
-// #define k_blockDimX    32
-// #define k_blockDimMaxY 16
-// #define k_blockSizeMin 128
-// #define k_blockSizeMax (k_blockDimX * k_blockDimMaxY)
+#define k_blockDimX    32
+#define k_blockDimMaxY 16
+#define k_blockSizeMin 128
+#define k_blockSizeMax (k_blockDimX * k_blockDimMaxY)
 
 bool getTargetDeviceGlobalMemSize(memsize_t *result, int argc, char **argv);
 void generateRandomData(float *data, const int dimx, const int dimy, const int dimz, const float lowerBound, const float upperBound);

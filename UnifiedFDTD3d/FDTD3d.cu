@@ -37,14 +37,19 @@ const int volumeSize = outerDimx * outerDimy * outerDimz;
 memsize_t memsize;
 const float lowerBound = 0.0f;
 const float upperBound = 1.0f;
+const int padding = (128 / sizeof(float)) - radius;
+const size_t paddedVolumeSize = volumeSize + padding;
 
 // INITIALIZE UNIFIED MEMORY
 __device__ __managed__ float input[volumeSize];
 __device__ __managed__ float output[volumeSize];
+__device__ __managed__ float buffer_in[paddedVolumeSize];
+__device__ __managed__ float buffer_out[paddedVolumeSize];
 
 // KERNELS
 __constant__ float stencil[RADIUS + 1];
-__global__ void FiniteDifferencesKernel()
+#define RADIUS 4
+__global__ void FiniteDifferencesKernel(float *bufferDst, float *bufferSrc)
 {
     bool validr = true;
     bool validw = true;
@@ -88,13 +93,13 @@ __global__ void FiniteDifferencesKernel()
     for (int i = RADIUS - 2 ; i >= 0 ; i--)
     {
         if (validr)
-            behind[i] = input[inputIndex];
+            behind[i] = bufferSrc[inputIndex];
 
         inputIndex += stride_z;
     }
 
     if (validr)
-        current = input[inputIndex];
+        current = bufferSrc[inputIndex];
 
     outputIndex = inputIndex;
     inputIndex += stride_z;
@@ -102,7 +107,7 @@ __global__ void FiniteDifferencesKernel()
     for (int i = 0 ; i < RADIUS ; i++)
     {
         if (validr)
-            infront[i] = input[inputIndex];
+            infront[i] = bufferSrc[inputIndex];
 
         inputIndex += stride_z;
     }
@@ -124,7 +129,7 @@ __global__ void FiniteDifferencesKernel()
             infront[i] = infront[i + 1];
 
         if (validr)
-            infront[RADIUS - 1] = input[inputIndex];
+            infront[RADIUS - 1] = bufferSrc[inputIndex];
 
         inputIndex  += stride_z;
         outputIndex += stride_z;
@@ -141,15 +146,15 @@ __global__ void FiniteDifferencesKernel()
         // Halo above & below
         if (ltidy < RADIUS)
         {
-            tile[ltidy][tx]                  = input[outputIndex - RADIUS * stride_y];
-            tile[ltidy + worky + RADIUS][tx] = input[outputIndex + worky * stride_y];
+            tile[ltidy][tx]                  = bufferSrc[outputIndex - RADIUS * stride_y];
+            tile[ltidy + worky + RADIUS][tx] = bufferSrc[outputIndex + worky * stride_y];
         }
 
         // Halo left & right
         if (ltidx < RADIUS)
         {
-            tile[ty][ltidx]                  = input[outputIndex - RADIUS];
-            tile[ty][ltidx + workx + RADIUS] = input[outputIndex + workx];
+            tile[ty][ltidx]                  = bufferSrc[outputIndex - RADIUS];
+            tile[ty][ltidx + workx + RADIUS] = bufferSrc[outputIndex + workx];
         }
 
         tile[ty][tx] = current;
@@ -166,7 +171,7 @@ __global__ void FiniteDifferencesKernel()
 
         // Store the output value
         if (validw)
-            output[outputIndex] = value;
+            bufferDst[outputIndex] = value;
     }
 }
 
@@ -194,6 +199,32 @@ int main(int argc, char * argv[]){
     int p = 0;
     for(int i = 0; i < volumeSize; p++, i+=(141376))
     fprintf(outfile, "input[%d] = %f\n", i, input[i]);
+
+    gpuErrchk(cudaMemcpy(buffer_in + padding, input, volumeSize * sizeof(float), cudaMemcpyDefault));
+    gpuErrchk(cudaMemcpy(buffer_out + padding, input, volumeSize * sizeof(float), cudaMemcpyDefault));
+
+    // Set up block and grid
+    dimBlock.x = 32;
+    dimBlock.y = 16;
+    dimGrid.x = 12;
+    dimGrid.y = 24;
+    // Execute the FDTD
+    float *bufferSrc = bufferIn + padding;
+    float *bufferDst = bufferOut + padding;
+    printf(" GPU FDTD loop\n");
+
+    for (int it = 0 ; it < timesteps ; it++){
+
+      printf("\tt = %d ", it);
+
+      // Launch the kernel
+      printf("launch kernel\n");
+      FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst, bufferSrc);
+
+      float *tmp = bufferDst;
+      bufferDst = bufferSrc;
+      bufferSrc = tmp;
+    }
 
 
     fclose(outfile);
