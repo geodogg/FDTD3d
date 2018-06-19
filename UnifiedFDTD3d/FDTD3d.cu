@@ -63,6 +63,11 @@ int main(int argc, char * argv[]){
     generateRandomData(input, outerDimx, outerDimy, outerDimz, lowerBound, upperBound);
     printf("FDTD on %d x %d x %d volume with symmetric filter radius %d for %d timesteps...\n\n", dimx, dimy, dimz, radius, timesteps);
 
+    int p = 0;
+    for(int i = 0; i < volumeSize; p++, i+=(141376))
+    fprintf(outfile, "input[%d] = %f\n", i, input[i]);
+
+
     fclose(outfile);
     return 0;
 }
