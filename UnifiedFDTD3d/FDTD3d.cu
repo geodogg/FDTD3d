@@ -204,6 +204,8 @@ int main(int argc, char * argv[]){
     gpuErrchk(cudaMemcpy(buffer_out + padding, input, volumeSize * sizeof(float), cudaMemcpyDefault));
 
     // Set up block and grid
+    dim3 dimBlock;
+    dim3 dimGrid;
     dimBlock.x = 32;
     dimBlock.y = 16;
     dimGrid.x = 12;
