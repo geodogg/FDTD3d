@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <helper_functions.h>
 #include <helper_cuda.h>
+#include <ctime>
 
 #include "FDTD3dGPUKernel.cuh"
 

@@ -20,7 +20,6 @@
 #include "FDTD3dGPU.h"
 
 #include <helper_functions.h>
-#include <ctime>
 
 #include <math.h>
 #include <assert.h>
