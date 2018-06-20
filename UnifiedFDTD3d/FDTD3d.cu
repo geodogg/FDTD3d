@@ -3,8 +3,6 @@
 #include <cassert>  // useful for debugging
 #include <cstdlib>
 #include <ctime>
-#include <iterator>
-#include <array>
 using namespace std;
 
 // CUDA LIBRARY INCLUDES
