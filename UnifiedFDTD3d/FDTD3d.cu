@@ -2,6 +2,8 @@
 #include <cstdio>
 #include <cassert>  // useful for debugging
 #include <cstdlib>
+#include <ctime>
+#include <iterator>
 using namespace std;
 
 // CUDA LIBRARY INCLUDES
@@ -196,10 +198,6 @@ int main(int argc, char * argv[]){
     generateRandomData(input, outerDimx, outerDimy, outerDimz, lowerBound, upperBound);
     printf("FDTD on %d x %d x %d volume with symmetric filter radius %d for %d timesteps...\n\n", dimx, dimy, dimz, radius, timesteps);
 
-    int p = 0;
-    for(int i = 0; i < volumeSize; p++, i+=(141376))
-    fprintf(outfile, "input[%d] = %f\n", i, input[i]);
-
     gpuErrchk(cudaMemcpy(buffer_in + padding, input, volumeSize * sizeof(float), cudaMemcpyDefault));
     gpuErrchk(cudaMemcpy(buffer_out + padding, input, volumeSize * sizeof(float), cudaMemcpyDefault));
 
@@ -215,6 +213,8 @@ int main(int argc, char * argv[]){
     float *bufferDst = buffer_out + padding;
     printf(" GPU FDTD loop\n");
 
+    clock_t tic = clock();  // start clocking
+
     for (int it = 0 ; it < timesteps ; it++){
 
       printf("\tt = %d ", it);
@@ -226,6 +226,18 @@ int main(int argc, char * argv[]){
       float *tmp = bufferDst;
       bufferDst = bufferSrc;
       bufferSrc = tmp;
+    }
+
+    clock_t toc = clock() - tic;
+    float elapsed_time = ((float)toc) / CLOCKS_PER_SEC;   // finish clocking
+    printf("Vector addition on the DEVICE\nElapsed time: %f (sec)\n", elapsed_time);
+
+    // for(int i = 0; i < volumeSize; p++, i+=(141376))
+    //   fprintf(outfile, "input[%d] = %f\n", i, input[i]);
+
+    int p = 0;
+    for(auto i = bufferDst.begin(); i != bufferDst.end(); i+=141376, p++){
+      fprintf(outfile, "input[%d] = %f\n", p, input[p]);
     }
 
     fclose(outfile);
