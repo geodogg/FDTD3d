@@ -20,6 +20,7 @@
 #include "FDTD3dGPU.h"
 
 #include <helper_functions.h>
+#include <ctime>
 
 #include <math.h>
 #include <assert.h>
@@ -203,8 +204,12 @@ bool runTest(int argc, const char **argv)
 
     // Execute on the device
     printf("fdtdGPU...\n");
+    clock_t tic = clock();  // start clocking
     fdtdGPU(device_output, input, coeff, dimx, dimy, dimz, radius, timesteps, argc, argv);
     printf("fdtdGPU complete\n");
+    clock_t toc = clock() - tic;
+    float elapsed_time = ((float)toc) / CLOCKS_PER_SEC;   // finish clocking
+    float elapsed_time = ((float)toc) / CLOCKS_PER_SEC;   // finish clocking
 
     // Compare the results
     float tolerance = 0.0001f;
