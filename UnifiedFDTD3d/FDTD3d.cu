@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iterator>
+#include <array>
 using namespace std;
 
 // CUDA LIBRARY INCLUDES
@@ -232,13 +233,8 @@ int main(int argc, char * argv[]){
     float elapsed_time = ((float)toc) / CLOCKS_PER_SEC;   // finish clocking
     printf("Vector addition on the DEVICE\nElapsed time: %f (sec)\n", elapsed_time);
 
-    // for(int i = 0; i < volumeSize; p++, i+=(141376))
-    //   fprintf(outfile, "input[%d] = %f\n", i, input[i]);
-
-    int p = 0;
-    for(auto i = bufferDst.begin(); i != bufferDst.end(); i+=141376, p++){
-      fprintf(outfile, "input[%d] = %f\n", p, input[p]);
-    }
+    for(int i = 0; i < paddedVolumeSize; i+=(141376))
+      fprintf(outfile, "input[%d] = %f\n", i, bufferDst[i]);
 
     fclose(outfile);
     return 0;
