@@ -160,6 +160,8 @@ bool fdtdGPU(float *output, const float *input, const float *coeff, const int di
     checkCudaErrors(cudaEventRecord(profileStart, 0));
 #endif
 
+    clock_t tic = clock();  // start clocking
+
     for (int it = 0 ; it < timesteps ; it++)
     {
         printf("\tt = %d ", it);
@@ -175,6 +177,10 @@ bool fdtdGPU(float *output, const float *input, const float *coeff, const int di
         bufferDst = bufferSrc;
         bufferSrc = tmp;
     }
+
+    clock_t toc = clock() - tic;
+    float elapsed_time = ((float)toc) / CLOCKS_PER_SEC;   // finish clocking
+    printf("Vector addition on the DEVICE\nElapsed time: %f (sec)\n", elapsed_time);
 
     printf("\n");
 
