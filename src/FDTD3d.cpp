@@ -209,7 +209,7 @@ bool runTest(int argc, const char **argv)
     printf("fdtdGPU complete\n");
     clock_t toc = clock() - tic;
     float elapsed_time = ((float)toc) / CLOCKS_PER_SEC;   // finish clocking
-    float elapsed_time = ((float)toc) / CLOCKS_PER_SEC;   // finish clocking
+    printf("Vector addition on the DEVICE\nElapsed time: %f (sec)\n", elapsed_time);
 
     // Compare the results
     float tolerance = 0.0001f;
