@@ -11,6 +11,7 @@ using namespace std;
 #include <helper_functions.h>
 #include <cooperative_groups.h>
 namespace cg = cooperative_groups;
+namespace hf = helper_functions;
 
 // EXTRA
 #include "functions.h"
@@ -182,8 +183,8 @@ int main(int argc, char * argv[]){
     }
 
     // allocate 3D managed memory
-    cg::cudaPitchedPtr* PDP;  // pitchedDevPtr
-    cg::cudaExtent ext;    // extent
+    hf::cudaPitchedPtr* PDP;  // pitchedDevPtr
+    hf::cudaExtent ext;    // extent
     cudaMalloc3D(PDP, ext);
 
     printf ("pitch: %d\npointer: %p\nxsize: %d\nysize: %d\n", PDP.pitch, PDP.ptr, PDP.xsize, PDP.ysize);
