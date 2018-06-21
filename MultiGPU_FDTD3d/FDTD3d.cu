@@ -11,7 +11,8 @@ using namespace std;
 #include <helper_functions.h>
 #include <cooperative_groups.h>
 namespace cg = cooperative_groups;
-namespace hf = helper_functions;
+#include <driver_types.h>
+
 // EXTRA
 #include "functions.h"
 
@@ -41,13 +42,13 @@ inline void gpuAssert(cudaError_t code, const char * file, int line, bool abort 
 #define padding 28
 #define paddedVolumeSize 56623132
 
-struct cudaPitchedPtr{
-  size_t = pitch, xsize, ysize;
-  void * = ptr;
-}
-struct cudaExtent{
-  size_t = width, height, depth;
-}
+// struct cudaPitchedPtr{
+//   size_t = pitch, xsize, ysize;
+//   void * = ptr;
+// }
+// struct cudaExtent{
+//   size_t = width, height, depth;
+// }
 
 
 // KERNELS
@@ -192,7 +193,7 @@ int main(int argc, char * argv[]){
 
     // allocate 3D managed memory
 
-    cudaPitchedPtr* PDP;  // pitchedDevPtr
+    cudaPitchedPtr *PDP;  // pitchedDevPtr
     cudaExtent ext;    // extent
     cudaMalloc3D(PDP, ext);
 
