@@ -11,7 +11,7 @@ using namespace std;
 #include <helper_functions.h>
 #include <cooperative_groups.h>
 namespace cg = cooperative_groups;
-namespace hf = helper_functions;
+namespace hf = helper_cuda;
 
 // EXTRA
 #include "functions.h"
