@@ -8,10 +8,7 @@
  * is strictly prohibited.
  *
  */
-
 #include "FDTD3d.h"
-
-
 
 #include <iostream>
 #include <iomanip>
