@@ -182,8 +182,8 @@ int main(int argc, char * argv[]){
     }
 
     // allocate 3D managed memory
-    cudaPitchedPtr* PDP;  // pitchedDevPtr
-    cudaExtent ext;    // extent
+    cg::cudaPitchedPtr* PDP;  // pitchedDevPtr
+    cg::cudaExtent ext;    // extent
     cudaMalloc3D(PDP, ext);
 
     printf ("pitch: %d\npointer: %p\nxsize: %d\nysize: %d\n", PDP.pitch, PDP.ptr, PDP.xsize, PDP.ysize);
