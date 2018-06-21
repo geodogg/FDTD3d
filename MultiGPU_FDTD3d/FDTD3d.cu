@@ -41,6 +41,15 @@ inline void gpuAssert(cudaError_t code, const char * file, int line, bool abort 
 #define padding 28
 #define paddedVolumeSize 56623132
 
+struct cudaPitchedPtr{
+  size_t = pitch, xsize, ysize;
+  void * = ptr;
+}
+struct cudaExtent{
+  size_t = width, height, depth;
+}
+
+
 // KERNELS
 // #define RADIUS 4
 // __constant__ float stencil[RADIUS + 1];
@@ -182,8 +191,9 @@ int main(int argc, char * argv[]){
     }
 
     // allocate 3D managed memory
-    hf::cudaPitchedPtr* PDP;  // pitchedDevPtr
-    hf::cudaExtent ext;    // extent
+
+    cudaPitchedPtr* PDP;  // pitchedDevPtr
+    cudaExtent ext;    // extent
     cudaMalloc3D(PDP, ext);
 
     printf ("pitch: %d\npointer: %p\nxsize: %d\nysize: %d\n", PDP.pitch, PDP.ptr, PDP.xsize, PDP.ysize);
