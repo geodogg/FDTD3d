@@ -39,7 +39,7 @@ inline void gpuAssert(cudaError_t code, const char * file, int line, bool abort 
 #define upperBound 1.0f
 #define padding 28
 #define paddedVolumeSize 56623132
-
+#define size (sizeof(float))
 // struct cudaPitchedPtr{
 //   size_t = pitch, xsize, ysize;
 //   void * = ptr;
@@ -190,11 +190,14 @@ int main(int argc, char * argv[]){
     // allocate 3D managed memory
 
     cudaPitchedPtr PDP;  // pitchedDevPtr
-    cudaExtent ext;    // extent
-    cudaMalloc3D(&PDP, ext);
+    cudaExtent volume_bytes = make_cudaExtent(size * dimx, size * dimy, size * dimz);
+    cudaMalloc3D(&PDP, volume_bytes);
 
+    printf ("width: %d\nheight: %d\ndepth: %d\n", volume_bytes.width, volume_bytes.height, volume_bytes.depth);
     printf ("pitch: %d\npointer: %p\nxsize: %d\nysize: %d\n", PDP.pitch, PDP.ptr, PDP.xsize, PDP.ysize);
-    printf ("width: %d\nheight: %d\ndepth: %d\n", ext.width, ext.height, ext.depth);
+
+
+
 
 
 
