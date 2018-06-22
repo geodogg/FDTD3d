@@ -244,6 +244,7 @@ endif
 
 FDTD3d.o: FDTD3d.cu
 	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
+	$(CUDA_INC_PATH)
 
 functions.o: functions.cu functions.h
 	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
