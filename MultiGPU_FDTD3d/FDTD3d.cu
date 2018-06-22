@@ -12,7 +12,7 @@ using namespace std;
 #include <cooperative_groups.h>
 namespace cg = cooperative_groups;
 #include <driver_types.h>
-
+namespace dt = driver_types;
 // EXTRA
 #include "functions.h"
 
@@ -193,8 +193,8 @@ int main(int argc, char * argv[]){
 
     // allocate 3D managed memory
 
-    cudaPitchedPtr *PDP;  // pitchedDevPtr
-    cudaExtent ext;    // extent
+    dt::cudaPitchedPtr *PDP;  // pitchedDevPtr
+    dt::cudaExtent ext;    // extent
     cudaMalloc3D(PDP, ext);
 
     printf ("pitch: %d\npointer: %p\nxsize: %d\nysize: %d\n", PDP.pitch, PDP.ptr, PDP.xsize, PDP.ysize);
