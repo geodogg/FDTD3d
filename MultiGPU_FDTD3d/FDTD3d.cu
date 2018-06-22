@@ -7,12 +7,10 @@ using namespace std;
 
 // CUDA LIBRARY INCLUDES
 #include <cuda_runtime.h>
-#include <helper_cuda.h>
-#include <helper_functions.h>
-#include <cooperative_groups.h>
-namespace cg = cooperative_groups;
-#include <driver_types.h>
-namespace dt = driver_types;
+// #include <helper_cuda.h>
+// #include <helper_functions.h>
+// #include <cooperative_groups.h>
+
 // EXTRA
 #include "functions.h"
 
@@ -49,8 +47,6 @@ inline void gpuAssert(cudaError_t code, const char * file, int line, bool abort 
 // struct cudaExtent{
 //   size_t = width, height, depth;
 // }
-
-
 // KERNELS
 // #define RADIUS 4
 // __constant__ float stencil[RADIUS + 1];
@@ -193,9 +189,9 @@ int main(int argc, char * argv[]){
 
     // allocate 3D managed memory
 
-    dt::cudaPitchedPtr *PDP;  // pitchedDevPtr
-    dt::cudaExtent ext;    // extent
-    cudaMalloc3D(PDP, ext);
+    cudaPitchedPtr PDP;  // pitchedDevPtr
+    cudaExtent ext;    // extent
+    cudaMalloc3D(&PDP, ext);
 
     printf ("pitch: %d\npointer: %p\nxsize: %d\nysize: %d\n", PDP.pitch, PDP.ptr, PDP.xsize, PDP.ysize);
     printf ("width: %d\nheight: %d\ndepth: %d\n", ext.width, ext.height, ext.depth);
