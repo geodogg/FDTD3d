@@ -22,7 +22,6 @@ inline void gpuAssert(cudaError_t code, const char * file, int line, bool abort 
     exit(code);
   }
 }
-
 #define printline(ans) { fprintf(outfile, "file: %s line: %d\n - ", __FILE__, __LINE__); fprintf(outfile, ans); }
 
 // DEFINE CONSTANTS DATA
@@ -186,9 +185,8 @@ int main(int argc, char * argv[]){
       printf(".....there is an error opening debug file....\n");
       return 0;
     }
-
+    
     // allocate 3D managed memory
-
     cudaPitchedPtr PDP;  // pitchedDevPtr
     cudaExtent volume_bytes = make_cudaExtent(size * dimx, size * dimy, size * dimz);
     cudaMalloc3D(&PDP, volume_bytes);
