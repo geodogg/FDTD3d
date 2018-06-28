@@ -200,15 +200,15 @@ int main(int argc, char * argv[]){
     // copy the 3D device memory to Unified Memory
     gpuErrchk(cudaMemcpy(input, PDP.ptr, PDP.pitch * PDP.xsize * PDP.ysize, cudaMemcpyDefault))
 
-    printline()
+    printline("good\n")
 
     for(int i = 0; i < 100; i++) {
 
-      printline()
+      printline("good\n")
       fprintf(outfile, "input[%d] = %f\n", i, input[i]);
 
-      printline()
-      fprintf(outfile, "PDP[%d] = %f\n", i, *(PDP.ptr));
+      printline("good\n")
+      //fprintf(outfile, "PDP[%d] = %f\n", i, *(PDP.ptr));
     }
 
 
