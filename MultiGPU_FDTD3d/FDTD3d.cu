@@ -176,7 +176,7 @@ inline void gpuAssert(cudaError_t code, const char * file, int line, bool abort 
 // }
 
 // Initialize Unified Memory
-__device__ __managed__ float input[dimx * dimy * dimz + 53];
+__device__ __managed__ float input[(dimx + 312) * dimy * dimz];
 
 int main(int argc, char * argv[]){
     printf("Running program: %s\n", argv[0]);
