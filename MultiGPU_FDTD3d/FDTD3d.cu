@@ -25,9 +25,9 @@ inline void gpuAssert(cudaError_t code, const char * file, int line, bool abort 
 #define printline(ans) { fprintf(outfile, "file: %s line: %d\n - ", __FILE__, __LINE__); fprintf(outfile, ans); }
 
 // DEFINE CONSTANTS DATA
-#define dimx 376
-#define dimy 376
-#define dimz 376
+#define dimx 50
+#define dimy 50
+#define dimz 50
 #define radius 4
 #define timesteps 5
 #define outerDimx 384
@@ -197,10 +197,11 @@ int main(int argc, char * argv[]){
     printf ("width: %d\nheight: %d\ndepth: %d\n", volume_bytes.width, volume_bytes.height, volume_bytes.depth);
     printf ("pitch: %d\npointer: %p\nxsize: %d\nysize: %d\n", PDP.pitch, PDP.ptr, PDP.xsize, PDP.ysize);
 
-    // copy the 3D device memory to Unified Memory
-    gpuErrchk(cudaMemcpy(input, PDP.ptr, PDP.pitch * PDP.xsize * PDP.ysize, cudaMemcpyDefault))
-
     printline("good\n")
+
+    // copy the 3D device memory to Unified Memory
+    gpuErrchk(cudaMemcpy(input, PDP, PDP.pitch * PDP.xsize * PDP.ysize, cudaMemcpyDefault))
+
 
     for(int i = 0; i < 100; i++) {
 
@@ -208,7 +209,7 @@ int main(int argc, char * argv[]){
       fprintf(outfile, "input[%d] = %f\n", i, input[i]);
 
       printline("good\n")
-      //fprintf(outfile, "PDP[%d] = %f\n", i, *(PDP.ptr));
+      //zfprintf(outfile, "PDP[%d] = %f\n", i, *(PDP.ptr));
     }
 
 
