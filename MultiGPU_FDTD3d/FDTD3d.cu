@@ -199,9 +199,10 @@ int main(int argc, char * argv[]){
 
     printline("good\n")
 
+    printf("1st:  %d\n  2nd:  %d\n", (dimx + 312) * dimy * dimz, PDP.pitch * PDP.xsize * PDP.ysize);
+
     // copy the 3D device memory to Unified Memory
     gpuErrchk(cudaMemcpy(input, PDP.ptr, PDP.pitch * PDP.xsize * PDP.ysize, cudaMemcpyDefault))
-
 
     for(int i = 0; i < 100; i++) {
 
@@ -212,9 +213,7 @@ int main(int argc, char * argv[]){
       //zfprintf(outfile, "PDP[%d] = %f\n", i, *(PDP.ptr));
     }
 
-
-
-    // // Get the memory size of the target device and save in memsize
+    // Get the memory size of the target device and save in memsize
     // getTargetDeviceGlobalMemSize(&memsize, argc, argv);
     // memsize /= 2;
     // printf("Memory size: %d\n", memsize);
