@@ -176,7 +176,7 @@ inline void gpuAssert(cudaError_t code, const char * file, int line, bool abort 
 // }
 
 // Initialize Unified Memory
-__device__ __managed__ float input[(dimx + 312) * dimy * dimz];
+__device__ __managed__ float input[20480000];
 
 int main(int argc, char * argv[]){
     printf("Running program: %s\n", argv[0]);
@@ -199,7 +199,7 @@ int main(int argc, char * argv[]){
 
     printline("good\n")
 
-    printf("1st:  %d\n  2nd:  %d\n", (dimx + 312) * dimy * dimz, PDP.pitch * PDP.xsize * PDP.ysize);
+    printf("1st:  %d\n2nd:  %d\n", (dimx + 312) * dimy * dimz, PDP.pitch * PDP.xsize * PDP.ysize);
 
     // copy the 3D device memory to Unified Memory
     gpuErrchk(cudaMemcpy(input, PDP.ptr, PDP.pitch * PDP.xsize * PDP.ysize, cudaMemcpyDefault))
