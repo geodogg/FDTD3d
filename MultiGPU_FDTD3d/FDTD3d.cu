@@ -175,6 +175,9 @@ inline void gpuAssert(cudaError_t code, const char * file, int line, bool abort 
 //     }
 // }
 
+// Initialize Unified Memory
+__device__ __managed__ float input[dimx * dimy * dimz + 8];
+
 int main(int argc, char * argv[]){
     printf("Running program: %s\n", argv[0]);
 
@@ -185,8 +188,8 @@ int main(int argc, char * argv[]){
       printf(".....there is an error opening debug file....\n");
       return 0;
     }
-    
-    // allocate 3D managed memory
+
+    // allocate 3D device memory
     cudaPitchedPtr PDP;  // pitchedDevPtr
     cudaExtent volume_bytes = make_cudaExtent(size * dimx, size * dimy, size * dimz);
     cudaMalloc3D(&PDP, volume_bytes);
@@ -194,9 +197,15 @@ int main(int argc, char * argv[]){
     printf ("width: %d\nheight: %d\ndepth: %d\n", volume_bytes.width, volume_bytes.height, volume_bytes.depth);
     printf ("pitch: %d\npointer: %p\nxsize: %d\nysize: %d\n", PDP.pitch, PDP.ptr, PDP.xsize, PDP.ysize);
 
+    // copy the 3D device memory to Unified Memory
+    gpuErrchk(cudaMemcpy(input, PDP.ptr, PDP.pitch * PDP.xsize * PDP.ysize, cudaMemcpyDefault))
 
+    for(int i = 0; i < ; i++) {
 
+      fprintf(outfile, "input[%d] = %f\n", i, input[i]);
 
+      fprintf(outfile, "PDP[%d] = %f\n", i, PDP[i]);
+    }
 
 
 
