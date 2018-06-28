@@ -204,7 +204,7 @@ int main(int argc, char * argv[]){
 
       fprintf(outfile, "input[%d] = %f\n", i, input[i]);
 
-      fprintf(outfile, "PDP[%d] = %f\n", i, cudaPitchedPtr[i]);
+      fprintf(outfile, "PDP[%d] = %f\n", i, PDP[i]);
     }
 
 
