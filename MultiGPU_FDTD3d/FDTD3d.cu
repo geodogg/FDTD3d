@@ -25,8 +25,8 @@ inline void gpuAssert(cudaError_t code, const char * file, int line, bool abort 
 #define printline(ans) { fprintf(outfile, "file: %s line: %d\n - ", __FILE__, __LINE__); fprintf(outfile, ans); }
 
 // DEFINE CONSTANTS DATA
-#define dimx 376
-#define dimy 376
+#define dimx 376 * 2
+#define dimy 376 * 2
 #define dimz 376
 #define radius 4
 #define timesteps 5
