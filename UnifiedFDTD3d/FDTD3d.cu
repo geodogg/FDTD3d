@@ -28,7 +28,7 @@ inline void gpuAssert(cudaError_t code, const char * file, int line, bool abort 
 // INITIALIZE DATA
 const int dimx = 376;
 const int dimy = 376;
-const int dimz = 376;
+const int dimz = 376 * 2;
 const int radius = 4;
 const int timesteps = 5;
 const int outerDimx = dimx + 2 * radius;
