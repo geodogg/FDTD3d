@@ -222,6 +222,10 @@ int main(int argc, char * argv[]){
       printf("launch kernel\n");
       FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst, bufferSrc);
 
+
+      FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst, bufferSrc);
+
+
       float *tmp = bufferDst;
       bufferDst = bufferSrc;
       bufferSrc = tmp;
