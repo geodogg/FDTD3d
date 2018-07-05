@@ -187,7 +187,7 @@ printf("argv:%c\n", **argv);
         // Toggle the buffers
         // Visual Studio 2005 does not like std::swap
         //    std::swap<float *>(bufferSrc, bufferDst);
-        cudaDeviceSynchronize();
+        //cudaDeviceSynchronize();
         float *tmp = bufferDst;
         bufferDst = bufferSrc;
         bufferSrc = tmp;
