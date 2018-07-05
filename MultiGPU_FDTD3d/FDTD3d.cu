@@ -197,8 +197,8 @@ int main(int argc, char * argv[]){
     float *buffer_out;
     gpuErrchk(cudaMallocManaged(&input, volumeSize * sizeof(float)));
     gpuErrchk(cudaMallocManaged(&output, volumeSize * sizeof(float)));
-    gpuErrchk(cudaMallocManaged(&buffer_in, paddedVolumeSize / 2 * sizeof(float)));
-    gpuErrchk(cudaMallocManaged(&buffer_out, paddedVolumeSize / 2 * sizeof(float)));
+    gpuErrchk(cudaMallocManaged(&buffer_in, paddedVolumeSize  * sizeof(float)));
+    gpuErrchk(cudaMallocManaged(&buffer_out, paddedVolumeSize * sizeof(float)));
 
     // Get the memory size of the target device and save in memsize
     getTargetDeviceGlobalMemSize(&memsize, argc, argv);
