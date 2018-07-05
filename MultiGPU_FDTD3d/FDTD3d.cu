@@ -238,7 +238,7 @@ int main(int argc, char * argv[]){
       cudaSetDevice(1);
       FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst + offset, bufferSrc + offset, dimx/2, dimy, dimz);
 
-      cudaDeviceSyncronize();
+      cudaDeviceSynchronize();
 
       float *tmp = bufferDst;
       bufferDst = bufferSrc;
