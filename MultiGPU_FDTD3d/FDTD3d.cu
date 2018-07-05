@@ -188,7 +188,7 @@ int main(int argc, char * argv[]){
     const float upperBound = 1.0f;
     const int padding = (128 / sizeof(float)) - radius;
     const size_t paddedVolumeSize = volumeSize + padding;
-    const int offset = volumeSize / 2;
+    const int offset = paddedVolumeSize / 2;
 
     // INITIALIZE UNIFIED MEMORY
     float *input;
