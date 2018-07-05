@@ -209,8 +209,8 @@ int main(int argc, char * argv[]){
     generateRandomData(input, outerDimx, outerDimy, outerDimz, lowerBound, upperBound);
     printf("FDTD on %d x %d x %d volume with symmetric filter radius %d for %d timesteps...\n\n", dimx, dimy, dimz, radius, timesteps);
 
-    gpuErrchk(cudaMemcpy(buffer_in + padding, input, paddedVolumeSize * sizeof(float), cudaMemcpyDefault));
-    gpuErrchk(cudaMemcpy(buffer_out + padding, input, paddedVolumeSize * sizeof(float), cudaMemcpyDefault));
+    gpuErrchk(cudaMemcpy(buffer_in + padding, input, volumeSize * sizeof(float), cudaMemcpyDefault));
+    gpuErrchk(cudaMemcpy(buffer_out + padding, input, volumeSize * sizeof(float), cudaMemcpyDefault));
 
     // Set up block and grid
     dim3 dimBlock;
