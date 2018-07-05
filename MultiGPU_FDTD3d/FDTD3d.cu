@@ -188,13 +188,13 @@ int main(int argc, char * argv[]){
     const float upperBound = 1.0f;
     const int padding = (128 / sizeof(float)) - radius;
     const size_t paddedVolumeSize = volumeSize + padding;
-    const int offset = volumeSize / 2;
+    // const int offset = volumeSize / 2;
 
     // INITIALIZE UNIFIED MEMORY
     float *input;
     float *output;
-    float *buffer_in;
-    float *buffer_out;
+    // float *buffer_in;
+    // float *buffer_out;
     gpuErrchk(cudaMallocManaged(&input, volumeSize * sizeof(float)));
     gpuErrchk(cudaMallocManaged(&output, volumeSize * sizeof(float)));
     // gpuErrchk(cudaMallocManaged(&buffer_in, paddedVolumeSize / 2 * sizeof(float)));
@@ -209,8 +209,8 @@ int main(int argc, char * argv[]){
     generateRandomData(input, outerDimx, outerDimy, outerDimz, lowerBound, upperBound);
     printf("FDTD on %d x %d x %d volume with symmetric filter radius %d for %d timesteps...\n\n", dimx, dimy, dimz, radius, timesteps);
 
-//    gpuErrchk(cudaMemcpy(buffer_in + padding, input, (volumeSize - offset) * sizeof(float), cudaMemcpyDefault));
-//    gpuErrchk(cudaMemcpy(buffer_out + padding, input,(volumeSize - offset) * sizeof(float), cudaMemcpyDefault));
+   // gpuErrchk(cudaMemcpy(buffer_in + padding, input, (volumeSize - offset) * sizeof(float), cudaMemcpyDefault));
+   // gpuErrchk(cudaMemcpy(buffer_out + padding, input,(volumeSize - offset) * sizeof(float), cudaMemcpyDefault));
 
     // Set up block and grid
     dim3 dimBlock;
