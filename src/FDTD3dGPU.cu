@@ -178,7 +178,7 @@ printf("argv:%c\n", **argv);
         // Launch the kernel
         printf("launch kernel on device 0\n");
         checkCudaErrors(cudaSetDevice(0));
-        FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDST + offset1, bufferSrc + offset1, dimx, dimy, dimz);
+        FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst + offset1, bufferSrc + offset1, dimx, dimy, dimz);
 
         // printf("launch kernel on device 1\n");
         // checkCudaErrors(cudaSetDevice(1));
