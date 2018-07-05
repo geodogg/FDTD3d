@@ -188,7 +188,7 @@ int main(int argc, char * argv[]){
     const float upperBound = 1.0f;
     const int padding = (128 / sizeof(float)) - radius;
     const size_t paddedVolumeSize = volumeSize + padding;
-    // const int offset = volumeSize / 2;
+    const int offset = volumeSize / 2;
 
     // INITIALIZE UNIFIED MEMORY
     float *input;
@@ -232,9 +232,13 @@ int main(int argc, char * argv[]){
 
       // Launch the kernel
       printf("launch kernel\n");
-      FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst, bufferSrc, dimx, dimy, dimz);
+      cudaSetDevice(0);
+      FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst, bufferSrc, dimx/2, dimy, dimz);
 
+      cudaSetDevice(1);
+      FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst + offset, bufferSrc + offset, dimx/2, dimy, dimz);
 
+      cudaDeviceSyncronize();
 
       float *tmp = bufferDst;
       bufferDst = bufferSrc;
