@@ -193,12 +193,12 @@ int main(int argc, char * argv[]){
     // INITIALIZE UNIFIED MEMORY
     float *input;
     float *output;
-    // float *buffer_in;
-    // float *buffer_out;
+    float *buffer_in;
+    float *buffer_out;
     gpuErrchk(cudaMallocManaged(&input, volumeSize * sizeof(float)));
     gpuErrchk(cudaMallocManaged(&output, volumeSize * sizeof(float)));
-    // gpuErrchk(cudaMallocManaged(&buffer_in, paddedVolumeSize / 2 * sizeof(float)));
-    // gpuErrchk(cudaMallocManaged(&buffer_out, paddedVolumeSize / 2 * sizeof(float)));
+    gpuErrchk(cudaMallocManaged(&buffer_in, paddedVolumeSize / 2 * sizeof(float)));
+    gpuErrchk(cudaMallocManaged(&buffer_out, paddedVolumeSize / 2 * sizeof(float)));
 
     // Get the memory size of the target device and save in memsize
     getTargetDeviceGlobalMemSize(&memsize, argc, argv);
@@ -209,8 +209,8 @@ int main(int argc, char * argv[]){
     generateRandomData(input, outerDimx, outerDimy, outerDimz, lowerBound, upperBound);
     printf("FDTD on %d x %d x %d volume with symmetric filter radius %d for %d timesteps...\n\n", dimx, dimy, dimz, radius, timesteps);
 
-   // gpuErrchk(cudaMemcpy(buffer_in + padding, input, (volumeSize - offset) * sizeof(float), cudaMemcpyDefault));
-   // gpuErrchk(cudaMemcpy(buffer_out + padding, input,(volumeSize - offset) * sizeof(float), cudaMemcpyDefault));
+    gpuErrchk(cudaMemcpy(buffer_in + padding, input, paddedVolumeSize * sizeof(float), cudaMemcpyDefault));
+    gpuErrchk(cudaMemcpy(buffer_out + padding, input, paddedVolumeSize * sizeof(float), cudaMemcpyDefault));
 
     // Set up block and grid
     dim3 dimBlock;
@@ -220,8 +220,8 @@ int main(int argc, char * argv[]){
     dimGrid.x = 12;
     dimGrid.y = 24;
     // Execute the FDTD
-    float *bufferSrc = input;
-    float *bufferDst = input;
+    float *bufferSrc = buffer_in;
+    float *bufferDst = buffer_out;
     printf(" GPU FDTD loop\n");
 
     clock_t tic = clock();  // start clocking
@@ -238,7 +238,7 @@ int main(int argc, char * argv[]){
       cudaSetDevice(1);
       FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst + offset, bufferSrc + offset, dimx/2, dimy, dimz);
 
-      cudaDeviceSynchronize();
+      cudaDeviceSyncronize();
 
       float *tmp = bufferDst;
       bufferDst = bufferSrc;
