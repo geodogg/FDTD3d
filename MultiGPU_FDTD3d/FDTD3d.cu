@@ -190,6 +190,8 @@ int main(int argc, char * argv[]){
     const size_t paddedVolumeSize = volumeSize + padding;
     const int offset = paddedVolumeSize / 2;
 
+    float *compiler_test;
+
     // INITIALIZE UNIFIED MEMORY
     float *input;
     float *output;
