@@ -48,7 +48,7 @@ bool fdtdGPU(float *output, const float *input, const float *coeff, const int di
 {
     const int         outerDimx  = dimx + 2 * radius;
     const int         outerDimy  = dimy + 2 * radius;
-    const int         outerDimz  = dimz + 2 * radius;
+    const int         outerDimz  = dimz + 2 * radius; // changed to 3 because data will be split in 2 along the zdim
     const size_t      volumeSize = outerDimx * outerDimy * outerDimz;
     int               deviceCount  = 0;
     int               targetDevice = 0;
@@ -56,6 +56,10 @@ bool fdtdGPU(float *output, const float *input, const float *coeff, const int di
     float            *bufferIn     = 0;
     dim3              dimBlock;
     dim3              dimGrid;
+
+printf("argc:%d\n", argc);
+printf("argv:%c\n", **argv);
+
 
     // Ensure that the inner data starts on a 128B boundary
     const int padding = (128 / sizeof(float)) - radius;
@@ -84,13 +88,13 @@ bool fdtdGPU(float *output, const float *input, const float *coeff, const int di
     checkCudaErrors(cudaGetDeviceCount(&deviceCount));
 
     // Select target device (device 0 by default)
-    targetDevice = findCudaDevice(argc, (const char **)argv);
+    targetDevice = 0;
 
     checkCudaErrors(cudaSetDevice(targetDevice));
 
     // Allocate memory buffers
-    checkCudaErrors(cudaMalloc((void **)&bufferOut, paddedVolumeSize * sizeof(float)));
-    checkCudaErrors(cudaMalloc((void **)&bufferIn, paddedVolumeSize * sizeof(float)));
+    checkCudaErrors(cudaMallocManaged((void **)&bufferOut, paddedVolumeSize * sizeof(float)));
+    checkCudaErrors(cudaMallocManaged((void **)&bufferIn, paddedVolumeSize * sizeof(float)));
 
     // Check for a command-line specified block size
     int userBlockSize;
@@ -155,6 +159,10 @@ bool fdtdGPU(float *output, const float *input, const float *coeff, const int di
     float *bufferDst = bufferOut + padding;
     printf(" GPU FDTD loop\n");
 
+    // Offset values
+    const int offset1 = 0;
+//    const int offset2;
+
 
 #ifdef GPU_PROFILING
     // Enqueue start event
@@ -168,12 +176,18 @@ bool fdtdGPU(float *output, const float *input, const float *coeff, const int di
         printf("\tt = %d ", it);
 
         // Launch the kernel
-        printf("launch kernel\n");
-        FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst, bufferSrc, dimx, dimy, dimz);
+        printf("launch kernel on device 0\n");
+        checkCudaErrors(cudaSetDevice(0));
+        FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDST + offset1, bufferSrc + offset1, dimx, dimy, dimz);
+
+        // printf("launch kernel on device 1\n");
+        // checkCudaErrors(cudaSetDevice(1));
+        // FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst + offset2, bufferSrc + offset2, dimx, dimy, dimz);
 
         // Toggle the buffers
         // Visual Studio 2005 does not like std::swap
         //    std::swap<float *>(bufferSrc, bufferDst);
+        cudaDeviceSynchronize();
         float *tmp = bufferDst;
         bufferDst = bufferSrc;
         bufferSrc = tmp;
