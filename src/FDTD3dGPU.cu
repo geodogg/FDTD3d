@@ -48,7 +48,7 @@ bool fdtdGPU(float *output, const float *input, const float *coeff, const int di
 {
     const int         outerDimx  = dimx + 2 * radius;
     const int         outerDimy  = dimy + 2 * radius;
-    const int         outerDimz  = dimz + 2 * radius; // changed to 3 because data will be split in 2 along the zdim
+    const int         outerDimz  = dimz + 3 * radius; // changed to 3 because data will be split in 2 along the zdim
     const size_t      volumeSize = outerDimx * outerDimy * outerDimz;
     int               deviceCount  = 0;
     int               targetDevice = 0;
@@ -178,16 +178,17 @@ printf("argv:%c\n", **argv);
         // Launch the kernel
         printf("launch kernel on device 0\n");
         checkCudaErrors(cudaSetDevice(0));
-        FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst + offset1, bufferSrc + offset1, dimx, dimy, dimz);
+        FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst + offset1, bufferSrc + offset1, dimx, dimy, dimz/2 + radius);
 
         // printf("launch kernel on device 1\n");
         // checkCudaErrors(cudaSetDevice(1));
-        // FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst + offset2, bufferSrc + offset2, dimx, dimy, dimz);
+        // FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst + offset2, bufferSrc + offset2, dimx, dimy, dimz/2 + radius);
+
+        cudaDeviceSynchronize();
 
         // Toggle the buffers
         // Visual Studio 2005 does not like std::swap
         //    std::swap<float *>(bufferSrc, bufferDst);
-        //cudaDeviceSynchronize();
         float *tmp = bufferDst;
         bufferDst = bufferSrc;
         bufferSrc = tmp;
