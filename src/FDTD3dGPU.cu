@@ -161,7 +161,7 @@ printf("argv:%c\n", **argv);
 
     // Offset values
     const int offset1 = 0;
-//    const int offset2;
+    const int offset2 = paddedVolumeSize * sizeof(float) / 2;
 
 
 #ifdef GPU_PROFILING
@@ -180,9 +180,9 @@ printf("argv:%c\n", **argv);
         checkCudaErrors(cudaSetDevice(0));
         FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst + offset1, bufferSrc + offset1, dimx, dimy, dimz/2 + radius);
 
-        // printf("launch kernel on device 1\n");
-        // checkCudaErrors(cudaSetDevice(1));
-        // FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst + offset2, bufferSrc + offset2, dimx, dimy, dimz/2 + radius);
+        printf("launch kernel on device 1\n");
+        checkCudaErrors(cudaSetDevice(1));
+        FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst + offset2, bufferSrc + offset2, dimx, dimy, dimz/2 + radius);
 
         cudaDeviceSynchronize();
 
