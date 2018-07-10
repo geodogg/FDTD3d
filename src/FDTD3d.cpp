@@ -9,6 +9,7 @@
  *
  */
 #include "FDTD3d.h"
+#include "FDTD3dGPU.h"
 
 #include <iostream>
 #include <iomanip>
