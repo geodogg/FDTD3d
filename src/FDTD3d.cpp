@@ -172,21 +172,24 @@ bool runTest(int argc, const char **argv)
     //~~~~~~~~~~~~~~~~~~~~~~~~~~!!! UPDATED HERE !!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ////////////////////////////////////////////////////////////////////////////
 
-    int* num_devices;
-    checkCudaErrors(cudaGetDeviceCount(num_devices));
+    int num_devices;
+    checkCudaErrors(cudaGetDeviceCount(&num_devices));
+
+    printf("Number of devices %i\n",num_devices);
+
     // conditional assignment <  condition ? value_if_true : value_if_false   >
-    int scale = (0 > (*num_devices)) ? (*num_devices) : 0;
+    //int scale = (0 > (num_devices)) ? (num_devices) : 0;
     // Initialize an array of devices
-    DEVICES *arr_device = new DEVICES[(*num_devices)];
+    DEVICES *arr_device = new DEVICES[(num_devices)];
 
     // allocate and initialize an array of stream handles
-    cudaStream_t *streams = (cudaStream_t *) malloc(scale * sizeof(cudaStream_t));
-    cudaEvent_t *events = (cudaEvent_t *) malloc(scale * sizeof(cudaEvent_t));
+    cudaStream_t *streams = (cudaStream_t *) malloc(num_devices * sizeof(cudaStream_t));
+    cudaEvent_t *events = (cudaEvent_t *) malloc(num_devices * sizeof(cudaEvent_t));
 
-    for (int i = 0; i < scale; i++)
+    for (int i = 0; i < num_devices; i++)
     {
         arr_device[i].device = i;
-        arr_device[i].num_devices = scale;
+        arr_device[i].num_devices = num_devices;
         checkCudaErrors(cudaSetDevice(arr_device[i].device));
         checkCudaErrors(cudaStreamCreate(&(streams[i])));
         checkCudaErrors(cudaEventCreate(&(events[i])));
