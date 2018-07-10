@@ -18,11 +18,11 @@
 
 #include <helper_functions.h>
 #include <helper_cuda.h>
-#include <cooperative_groups.h>
+#include "FDTD3dGPUKernel.cuh"
+
 
 #include <math.h>
 #include <assert.h>
-
 
 #include "FDTD3DMultiGPUadditional.h"
 
