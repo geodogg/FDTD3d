@@ -17,6 +17,8 @@
 #include "FDTD3dGPU.h"
 
 #include <helper_functions.h>
+#include <helper_cuda.h>
+#include <cooperative_groups.h>
 
 #include <math.h>
 #include <assert.h>
