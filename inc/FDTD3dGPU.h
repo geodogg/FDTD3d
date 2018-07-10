@@ -29,7 +29,7 @@ typedef uint64_t memsize_t;
 // Structure for Device Properties.
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <helper_cuda.h>
+#include <cooperative_groups.h>
 
 typedef struct
 {
