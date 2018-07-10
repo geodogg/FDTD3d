@@ -194,6 +194,7 @@ bool runTest(int argc, const char **argv)
     for (int i = 0; i < scale; i++)
     {
         arr_device[i].device = i;
+        arr_device[i].num_devices = scale;
         checkCudaErrors(cudaSetDevice(arr_device[i].device));
         checkCudaErrors(cudaStreamCreate(&(streams[i])));
         checkCudaErrors(cudaEventCreate(&(events[i])));

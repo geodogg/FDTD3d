@@ -49,12 +49,12 @@ bool getTargetDeviceGlobalMemSize(memsize_t *result, const int argc, const char 
     return true;
 }
 
-bool fdtdGPU(DEVICES * arr_device, float *output, const float *input, const float *coeff, const int dimx, const int dimy, const int dimz, const int radius, const int timesteps, const int argc, const char **argv)
+bool fdtdGPU(DEVICES *arr_device, float *output, const float *input, const float *coeff, const int dimx, const int dimy, const int dimz, const int radius, const int timesteps, const int argc, const char **argv)
 {
-    printf("number of devices: %d\n", (*arr_device.size()));
+
     const int         outerDimx  = dimx + 2 * radius;
     const int         outerDimy  = dimy + 2 * radius;
-    const int         outerDimz  = dimz + 2 * radius * (*arr_device).size();
+    const int         outerDimz  = dimz + 2 * radius * arr_device[0].num_devices;
     const size_t      volumeSize = outerDimx * outerDimy * outerDimz;
     int               deviceCount  = 0;
     int               targetDevice = 0;

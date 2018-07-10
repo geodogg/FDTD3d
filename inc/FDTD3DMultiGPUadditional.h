@@ -15,7 +15,7 @@ typedef struct
     dim3 dimBlock;
     dim3 dimGrid;
     cudaDeviceProp deviceProp;  // cuda device properties
-
+    int num_devices;
 } DEVICES;
 
 // function to initialize the argument GPU
