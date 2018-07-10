@@ -187,11 +187,11 @@ bool runTest(int argc, const char **argv)
     DEVICES *arr_device = new DEVICES[(*num_devices)];
 
     // allocate and initialize an array of stream handles
-    cudaStream_t *streams = (cudaStream_t *) malloc(num_devices * sizeof(cudaStream_t));
-    cudaEvent_t *events = (cudaEvent_t *) malloc(num_devices * sizeof(cudaEvent_t));
+    cudaStream_t *streams = (cudaStream_t *) malloc(scale * sizeof(cudaStream_t));
+    cudaEvent_t *events = (cudaEvent_t *) malloc(scale * sizeof(cudaEvent_t));
 
 
-    for (int i = 0; i < num_devices; i++)
+    for (int i = 0; i < scale; i++)
     {
         arr_device[i].device = i;
         checkCudaErrors(cudaSetDevice(arr_device[i].device));
