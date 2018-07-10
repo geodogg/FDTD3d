@@ -85,6 +85,7 @@ bool runTest(int argc, const char **argv)
       printf(".....there is an error opening debug file....\n");
       return 0;
     }
+    printline("GOOD\n")
 
     float *host_output;
     float *device_output;
