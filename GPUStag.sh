@@ -5,4 +5,4 @@
 #SBATCH --mem=16GB               # memory per node
 #SBATCH --time=0-00:10           # time (DD-HH:MM)
 #SBATCH --output=%N-%j.out       # %N for node name., %j for jobID
-nvprof ./FDTD3d
+./FDTD3d

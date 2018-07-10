@@ -112,6 +112,8 @@ bool runTest(int argc, const char **argv)
     printf(" getTargetDeviceGlobalMemSize\n");
     getTargetDeviceGlobalMemSize(&memsize, argc, argv);
 
+    printline("GOOD\n")
+
     // We can never use all the memory so to keep things simple we aim to
     // use around half the total memory
     memsize /= 2;
@@ -187,7 +189,7 @@ bool runTest(int argc, const char **argv)
 
     printf("Number of devices %d\n",num_devices);
 
-    printline("Hello! Welcome to the FDTD3d with unified memory.\n")
+    printline("GOOD\n")
 
     // Initialize an array of devices
     DEVICES *arr_device = new DEVICES[num_devices];
@@ -195,6 +197,8 @@ bool runTest(int argc, const char **argv)
     // allocate and initialize an array of stream handles
     cudaStream_t *streams = (cudaStream_t *) malloc(num_devices * sizeof(cudaStream_t));
     cudaEvent_t *events = (cudaEvent_t *) malloc(num_devices * sizeof(cudaEvent_t));
+
+    printline("GOOD\n")
 
     for (int i = 0; i < num_devices; i++)
     {
