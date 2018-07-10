@@ -172,8 +172,6 @@ bool runTest(int argc, const char **argv)
     //~~~~~~~~~~~~~~~~~~~~~~~~~~!!! UPDATED HERE !!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ////////////////////////////////////////////////////////////////////////////
 
-    int* compile_tester;
-
     int* num_devices;
     checkCudaErrors(cudaGetDeviceCount(num_devices));
     // conditional assignment <  condition ? value_if_true : value_if_false   >
