@@ -18,12 +18,6 @@
 
 #include "FDTD3dGPUKernel.cuh"
 
-#include "FDTD3DMultiGPUadditional.h"
-
-void initGPU(DEVICES *device){
-
-}
-
 bool getTargetDeviceGlobalMemSize(memsize_t *result, const int argc, const char **argv)
 {
     int               deviceCount  = 0;

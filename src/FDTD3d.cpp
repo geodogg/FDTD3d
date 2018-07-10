@@ -10,22 +10,16 @@
  */
 #include "FDTD3d.h"
 #include "FDTD3dGPU.h"
+#include "FDTD3dReference.h"
 
 #include <iostream>
 #include <iomanip>
-
-#include "FDTD3dReference.h"
-#include "FDTD3dGPU.h"
-
-#include "cuda_runtime.h"
-
-#include <helper_functions.h>
-#include <helper_cuda.h>
-
 #include <math.h>
 #include <assert.h>
 
-#include "FDTD3DMultiGPUadditional.h"
+#include "cuda_runtime.h"
+#include <helper_functions.h>
+#include <helper_cuda.h>
 
 #ifndef CLAMP
 #define CLAMP(a, min, max) ( MIN(max, MAX(a, min)) )

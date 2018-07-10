@@ -20,12 +20,27 @@ typedef unsigned __int64 memsize_t;
 typedef uint64_t memsize_t;
 #endif
 
-#include "FDTD3DMultiGPUadditional.h"
-
 #define k_blockDimX    32
 #define k_blockDimMaxY 16
 #define k_blockSizeMin 128
 #define k_blockSizeMax (k_blockDimX * k_blockDimMaxY)
+
+////////////////////////////////////////////////////////////////////////////////
+// Structure for Device Properties.
+////////////////////////////////////////////////////////////////////////////////
+typedef struct
+{
+    int device;            // device ID
+    int data_size;         // bytes of data to be processed on device
+    float *d_data;         // pointer to device data
+    float *h_data;         // pointer to host location of data
+    float *u_data;         // pointer to unified d_data
+    dim3 dimBlock;
+    dim3 dimGrid;
+    cudaDeviceProp deviceProp;  // cuda device properties
+    int num_devices;
+
+} DEVICES;
 
 bool getTargetDeviceGlobalMemSize(memsize_t *result, const int argc, const char **argv);
 bool fdtdGPU(DEVICES *arr_device, float *output, const float *input, const float *coeff, const int dimx, const int dimy, const int dimz, const int radius, const int timesteps, const int argc, const char **argv);
