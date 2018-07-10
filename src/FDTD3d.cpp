@@ -17,10 +17,9 @@
 #include "FDTD3dReference.h"
 #include "FDTD3dGPU.h"
 
+#include "cuda_runtime.h"
 #include <helper_functions.h>
 #include <helper_cuda.h>
-#include "FDTD3dGPUKernel.cuh"
-
 
 #include <math.h>
 #include <assert.h>
