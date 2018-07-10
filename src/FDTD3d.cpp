@@ -20,6 +20,8 @@
 #include <helper_functions.h>
 #include <helper_cuda.h>
 
+#define printline(ans) { fprintf(outfile, "file: %s line: %d\n - ", __FILE__, __LINE__); fprintf(outfile, ans); }
+
 #ifndef CLAMP
 #define CLAMP(a, min, max) ( MIN(max, MAX(a, min)) )
 #endif
@@ -75,6 +77,15 @@ void showHelp(const int argc, const char **argv)
 
 bool runTest(int argc, const char **argv)
 {
+
+    // outfile for debugging
+    FILE * outfile;
+    outfile = fopen("debug.txt", "w");
+    if (outfile == NULL){
+      printf(".....there is an error opening debug file....\n");
+      return 0;
+    }
+
     float *host_output;
     float *device_output;
     float *input;
@@ -167,20 +178,19 @@ bool runTest(int argc, const char **argv)
         timesteps = CLAMP(getCmdLineArgumentInt(argc, argv, "timesteps"), k_timesteps_min, k_timesteps_max);
     }
 
-
     ////////////////////////////////////////////////////////////////////////////
     //~~~~~~~~~~~~~~~~~~~~~~~~~~!!! UPDATED HERE !!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ////////////////////////////////////////////////////////////////////////////
 
-    int num_devices;
+    int num_devices = 0;
     checkCudaErrors(cudaGetDeviceCount(&num_devices));
 
-    printf("Number of devices %i\n",num_devices);
+    printf("Number of devices %d\n",num_devices);
 
-    // conditional assignment <  condition ? value_if_true : value_if_false   >
-    //int scale = (0 > (num_devices)) ? (num_devices) : 0;
+    printline("Hello! Welcome to the FDTD3d with unified memory.\n")
+
     // Initialize an array of devices
-    DEVICES *arr_device = new DEVICES[(num_devices)];
+    DEVICES *arr_device = new DEVICES[num_devices];
 
     // allocate and initialize an array of stream handles
     cudaStream_t *streams = (cudaStream_t *) malloc(num_devices * sizeof(cudaStream_t));
