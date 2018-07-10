@@ -21,6 +21,9 @@
 #include <math.h>
 #include <assert.h>
 
+
+#include "FDTD3DMultiGPUadditional.h"
+
 #ifndef CLAMP
 #define CLAMP(a, min, max) ( MIN(max, MAX(a, min)) )
 #endif
@@ -168,6 +171,35 @@ bool runTest(int argc, const char **argv)
         timesteps = CLAMP(getCmdLineArgumentInt(argc, argv, "timesteps"), k_timesteps_min, k_timesteps_max);
     }
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~!!! UPDATED HERE !!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    int* num_devices;
+    checkCudaErrors(cudaGetDeviceCount(num_devices));
+    // conditional assignment <  condition ? value_if_true : value_if_false   >
+    int scale = (0 > (*num_devices)) ? (*num_devices) : 0;
+    // Initialize an array of devices
+    DEVICES *arr_device = new DEVICES[(*num_devices)];
+
+    // allocate and initialize an array of stream handles
+    cudaStream_t *streams = (cudaStream_t *) malloc(num_devices * sizeof(cudaStream_t));
+    cudaEvent_t *events = (cudaEvent_t *) malloc(num_devices * sizeof(cudaEvent_t));
+
+
+    for (int i = 0; i < num_devices; i++)
+    {
+        arr_device[i].device = i;
+        checkCudaErrors(cudaSetDevice(arr_device[i].device));
+        checkCudaErrors(cudaStreamCreate(&(streams[i])));
+        checkCudaErrors(cudaEventCreate(&(events[i])));
+        checkCudaErrors(cudaGetDeviceProperties(&(arr_device[i].deviceProp), arr_device[i].device));
+
+        // Allocate intermediate memory for MC integrator
+        // and initialize RNG state
+
+    }
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     // Determine volume size
     outerDimx = dimx + 2 * radius;
     outerDimy = dimy + 2 * radius;
@@ -207,4 +239,8 @@ bool runTest(int argc, const char **argv)
     float tolerance = 0.0001f;
     printf("\nCompareData (tolerance %f)...\n", tolerance);
     return compareData(device_output, host_output, dimx, dimy, dimz, radius, tolerance);
+
+
+    delete[] arr_device;
+
 }

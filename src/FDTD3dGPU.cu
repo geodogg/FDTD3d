@@ -19,6 +19,9 @@
 
 #include "FDTD3dGPUKernel.cuh"
 
+#include "FDTD3DMultiGPUadditional.h"
+
+
 bool getTargetDeviceGlobalMemSize(memsize_t *result, const int argc, const char **argv)
 {
     int               deviceCount  = 0;
@@ -48,7 +51,7 @@ bool fdtdGPU(float *output, const float *input, const float *coeff, const int di
 {
     const int         outerDimx  = dimx + 2 * radius;
     const int         outerDimy  = dimy + 2 * radius;
-    const int         outerDimz  = dimz + 3 * radius; // changed to 3 because data will be split in 2 along the zdim
+    const int         outerDimz  = dimz + 2 * radius; // changed to 3 because data will be split in 2 along the zdim
     const size_t      volumeSize = outerDimx * outerDimy * outerDimz;
     int               deviceCount  = 0;
     int               targetDevice = 0;
@@ -56,6 +59,10 @@ bool fdtdGPU(float *output, const float *input, const float *coeff, const int di
     float            *bufferIn     = 0;
     dim3              dimBlock;
     dim3              dimGrid;
+
+void initGPU(DEVICES *device){
+
+}
 
 printf("argc:%d\n", argc);
 printf("argv:%c\n", **argv);

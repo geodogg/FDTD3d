@@ -12,6 +12,8 @@
 #include "FDTD3dGPU.h"
 #include <cooperative_groups.h>
 
+#include "FDTD3DMultiGPUadditional.h"
+
 namespace cg = cooperative_groups;
 
 // Note: If you change the RADIUS, you should also change the unrolling below
