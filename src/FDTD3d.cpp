@@ -183,7 +183,6 @@ bool runTest(int argc, const char **argv)
     cudaStream_t *streams = (cudaStream_t *) malloc(scale * sizeof(cudaStream_t));
     cudaEvent_t *events = (cudaEvent_t *) malloc(scale * sizeof(cudaEvent_t));
 
-
     for (int i = 0; i < scale; i++)
     {
         arr_device[i].device = i;
