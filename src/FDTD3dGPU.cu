@@ -15,12 +15,14 @@
 #include <algorithm>
 #include <helper_functions.h>
 #include <helper_cuda.h>
-#include <ctime>
 
 #include "FDTD3dGPUKernel.cuh"
 
 #include "FDTD3DMultiGPUadditional.h"
 
+void initGPU(DEVICES *device){
+
+}
 
 bool getTargetDeviceGlobalMemSize(memsize_t *result, const int argc, const char **argv)
 {
@@ -47,11 +49,12 @@ bool getTargetDeviceGlobalMemSize(memsize_t *result, const int argc, const char 
     return true;
 }
 
-bool fdtdGPU(float *output, const float *input, const float *coeff, const int dimx, const int dimy, const int dimz, const int radius, const int timesteps, const int argc, const char **argv)
+bool fdtdGPU(DEVICES * arr_device, float *output, const float *input, const float *coeff, const int dimx, const int dimy, const int dimz, const int radius, const int timesteps, const int argc, const char **argv)
 {
+    printf("number of devices: %d\n", (*arr_device.size()));
     const int         outerDimx  = dimx + 2 * radius;
     const int         outerDimy  = dimy + 2 * radius;
-    const int         outerDimz  = dimz + 2 * radius; // changed to 3 because data will be split in 2 along the zdim
+    const int         outerDimz  = dimz + 2 * radius * (*arr_device).size();
     const size_t      volumeSize = outerDimx * outerDimy * outerDimz;
     int               deviceCount  = 0;
     int               targetDevice = 0;
@@ -59,14 +62,6 @@ bool fdtdGPU(float *output, const float *input, const float *coeff, const int di
     float            *bufferIn     = 0;
     dim3              dimBlock;
     dim3              dimGrid;
-
-void initGPU(DEVICES *device){
-
-}
-
-printf("argc:%d\n", argc);
-printf("argv:%c\n", **argv);
-
 
     // Ensure that the inner data starts on a 128B boundary
     const int padding = (128 / sizeof(float)) - radius;
@@ -91,17 +86,21 @@ printf("argv:%c\n", **argv);
         exit(EXIT_FAILURE);
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~!!! UPDATED HERE !!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ////////////////////////////////////////////////////////////////////////////
+
     // Get the number of CUDA enabled GPU devices
     checkCudaErrors(cudaGetDeviceCount(&deviceCount));
 
     // Select target device (device 0 by default)
-    targetDevice = 0;
+    targetDevice = findCudaDevice(argc, (const char **)argv);
 
     checkCudaErrors(cudaSetDevice(targetDevice));
 
     // Allocate memory buffers
-    checkCudaErrors(cudaMallocManaged((void **)&bufferOut, paddedVolumeSize * sizeof(float)));
-    checkCudaErrors(cudaMallocManaged((void **)&bufferIn, paddedVolumeSize * sizeof(float)));
+    checkCudaErrors(cudaMalloc((void **)&bufferOut, paddedVolumeSize * sizeof(float)));
+    checkCudaErrors(cudaMalloc((void **)&bufferIn, paddedVolumeSize * sizeof(float)));
 
     // Check for a command-line specified block size
     int userBlockSize;
@@ -152,7 +151,6 @@ printf("argv:%c\n", **argv);
     // Copy the coefficients to the device coefficient buffer
     checkCudaErrors(cudaMemcpyToSymbol(stencil, (void *)coeff, (radius + 1) * sizeof(float)));
 
-
 #ifdef GPU_PROFILING
 
     // Create the events
@@ -166,32 +164,18 @@ printf("argv:%c\n", **argv);
     float *bufferDst = bufferOut + padding;
     printf(" GPU FDTD loop\n");
 
-    // Offset values
-    const int offset1 = 0;
-    const int offset2 = paddedVolumeSize * sizeof(float) / 2;
-
-
 #ifdef GPU_PROFILING
     // Enqueue start event
     checkCudaErrors(cudaEventRecord(profileStart, 0));
 #endif
-
-    clock_t tic = clock();  // start clocking
 
     for (int it = 0 ; it < timesteps ; it++)
     {
         printf("\tt = %d ", it);
 
         // Launch the kernel
-        printf("launch kernel on device 0\n");
-        checkCudaErrors(cudaSetDevice(0));
-        FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst + offset1, bufferSrc + offset1, dimx, dimy, dimz/2 + radius);
-
-        printf("launch kernel on device 1\n");
-        checkCudaErrors(cudaSetDevice(1));
-        FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst + offset2, bufferSrc + offset2, dimx, dimy, dimz/2 + radius);
-
-        cudaDeviceSynchronize();
+        printf("launch kernel\n");
+        FiniteDifferencesKernel<<<dimGrid, dimBlock>>>(bufferDst, bufferSrc, dimx, dimy, dimz);
 
         // Toggle the buffers
         // Visual Studio 2005 does not like std::swap
@@ -200,10 +184,6 @@ printf("argv:%c\n", **argv);
         bufferDst = bufferSrc;
         bufferSrc = tmp;
     }
-
-    clock_t toc = clock() - tic;
-    float elapsed_time = ((float)toc) / CLOCKS_PER_SEC;   // finish clocking
-    printf("Vector addition on the DEVICE\nElapsed time: %f (sec)\n", elapsed_time);
 
     printf("\n");
 

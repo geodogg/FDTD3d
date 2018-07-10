@@ -171,7 +171,10 @@ bool runTest(int argc, const char **argv)
         timesteps = CLAMP(getCmdLineArgumentInt(argc, argv, "timesteps"), k_timesteps_min, k_timesteps_max);
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////
     //~~~~~~~~~~~~~~~~~~~~~~~~~~!!! UPDATED HERE !!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ////////////////////////////////////////////////////////////////////////////
 
     int* num_devices;
     checkCudaErrors(cudaGetDeviceCount(num_devices));
@@ -198,7 +201,9 @@ bool runTest(int argc, const char **argv)
 
     }
 
+    ////////////////////////////////////////////////////////////////////////////
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ////////////////////////////////////////////////////////////////////////////
 
     // Determine volume size
     outerDimx = dimx + 2 * radius;
@@ -232,7 +237,7 @@ bool runTest(int argc, const char **argv)
 
     // Execute on the device
     printf("fdtdGPU...\n");
-    fdtdGPU(device_output, input, coeff, dimx, dimy, dimz, radius, timesteps, argc, argv);
+    fdtdGPU(arr_device, device_output, input, coeff, dimx, dimy, dimz, radius, timesteps, argc, argv);
     printf("fdtdGPU complete\n");
 
     // Compare the results
