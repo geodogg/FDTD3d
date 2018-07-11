@@ -253,7 +253,7 @@ run: build
 	$(EXEC) ./FDTD3d
 
 clean:
-	rm -f FDTD3d *.o *.out debux.txt
+	rm -f FDTD3d *.o *.out debug.txt
 	rm -rf ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)/FDTD3d
 
 clobber: clean
