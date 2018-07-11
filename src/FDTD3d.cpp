@@ -185,6 +185,8 @@ bool runTest(int argc, const char **argv)
     //~~~~~~~~~~~~~~~~~~~~~~~~~~!!! UPDATED HERE !!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ////////////////////////////////////////////////////////////////////////////
 
+    printline("GOOD\n")
+
     int num_devices = 0;
     checkCudaErrors(cudaGetDeviceCount(&num_devices));
 
